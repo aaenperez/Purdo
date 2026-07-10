@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Purdo — Ontology Planner (front-end vision demo)</title>
+<style>
+  /* ============ tokens ============ */
+  :root {
+    --page:      #f6f4ef;
+    --surface:   #ffffff;
+    --surface-2: #efece4;
+    --line:      rgba(24, 22, 14, 0.12);
+    --line-soft: rgba(24, 22, 14, 0.07);
+    --ink:       #17191d;
+    --ink-2:     #565b63;
+    --muted:     #8a8f98;
+    --accent:    #8a6d2e;   /* deep boilermaker gold, legible on paper */
+    --accent-ink:#6e5522;
+    --accent-wash: rgba(138, 109, 46, 0.10);
+    --track:     rgba(24, 22, 14, 0.10);
+    --good:      #0ca30c;
+    --warning:   #fab219;
+    --serious:   #ec835a;
+    --critical:  #d03b3b;
+    --cat-1:     #2a78d6;   /* homework */
+    --cat-2:     #1baf7a;   /* quiz */
+    --cat-3:     #eda100;   /* project */
+    --mono: ui-monospace, "Cascadia Mono", Consolas, "JetBrains Mono", "SF Mono", monospace;
+    --sans: system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --page:      #0e1013;
+      --surface:   #15181d;
+      --surface-2: #1b1f26;
+      --line:      rgba(255, 255, 255, 0.10);
+      --line-soft: rgba(255, 255, 255, 0.055);
+      --ink:       #edeef0;
+      --ink-2:     #a3aab5;
+      --muted:     #79808c;
+      --accent:    #cfb991;  /* boilermaker gold on black */
+      --accent-ink:#e3cd9e;
+      --accent-wash: rgba(207, 185, 145, 0.13);
+      --track:     rgba(255, 255, 255, 0.10);
+      --cat-1:     #3987e5;
+      --cat-2:     #199e70;
+      --cat-3:     #c98500;
+    }
+  }
+  :root[data-theme="light"] {
+    --page:      #f6f4ef; --surface: #ffffff; --surface-2: #efece4;
+    --line: rgba(24,22,14,0.12); --line-soft: rgba(24,22,14,0.07);
+    --ink: #17191d; --ink-2: #565b63; --muted: #8a8f98;
+    --accent: #8a6d2e; --accent-ink: #6e5522; --accent-wash: rgba(138,109,46,0.10);
+    --track: rgba(24,22,14,0.10);
+    --cat-1: #2a78d6; --cat-2: #1baf7a; --cat-3: #eda100;
+  }
+  :root[data-theme="dark"] {
+    --page: #0e1013; --surface: #15181d; --surface-2: #1b1f26;
+    --line: rgba(255,255,255,0.10); --line-soft: rgba(255,255,255,0.055);
+    --ink: #edeef0; --ink-2: #a3aab5; --muted: #79808c;
+    --accent: #cfb991; --accent-ink: #e3cd9e; --accent-wash: rgba(207,185,145,0.13);
+    --track: rgba(255,255,255,0.10);
+    --cat-1: #3987e5; --cat-2: #199e70; --cat-3: #c98500;
+  }
+
+  /* ============ base ============ */
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    background: var(--page);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 14px;
+    line-height: 1.45;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 20px 24px 48px; }
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .num { font-variant-numeric: tabular-nums; }
+  button { font: inherit; color: inherit; cursor: pointer; }
+  a { color: var(--accent-ink); text-decoration: none; }
+  a:hover, a:focus-visible { text-decoration: underline; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  /* ============ header ============ */
+  header {
+    display: flex; align-items: center; gap: 16px;
+    padding-bottom: 16px; border-bottom: 1px solid var(--line);
+  }
+  .wordmark {
+    font-family: var(--mono); font-size: 20px; font-weight: 700;
+    letter-spacing: 0.04em; color: var(--ink);
+  }
+  .wordmark .cursor { color: var(--accent); }
+  .tagline { color: var(--ink-2); font-size: 13px; padding-top: 2px; }
+  .spacer { flex: 1; }
+  .student-chip {
+    display: flex; align-items: center; gap: 10px;
+    border: 1px solid var(--line); border-radius: 999px;
+    padding: 6px 14px 6px 8px; background: var(--surface);
+    font-family: var(--mono); font-size: 12px; color: var(--ink-2);
+  }
+  .student-chip .avatar {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--accent); color: var(--page);
+    display: grid; place-items: center;
+    font-weight: 700; font-size: 11px;
+  }
+  .theme-btn {
+    border: 1px solid var(--line); background: var(--surface);
+    border-radius: 8px; padding: 6px 12px;
+    font-family: var(--mono); font-size: 12px; color: var(--ink-2);
+  }
+  .theme-btn:hover { border-color: var(--accent); color: var(--ink); }
+
+  /* ============ ask bar (the hero) ============ */
+  .ask {
+    margin-top: 22px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 18px 20px 16px;
+  }
+  .ask-row { display: flex; gap: 12px; align-items: center; }
+  .ask-input {
+    flex: 1; display: flex; align-items: center; gap: 10px;
+    background: var(--surface-2);
+    border: 1px solid var(--line-soft); border-radius: 9px;
+    padding: 11px 14px; color: var(--ink);
+    font-size: 15px;
+  }
+  .ask-input .prompt-glyph { font-family: var(--mono); color: var(--accent); font-weight: 700; }
+  .ask-input .q { flex: 1; }
+  .ask-input .caret {
+    display: inline-block; width: 8px; height: 18px;
+    background: var(--accent); animation: blink 1.1s steps(1) infinite;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+  @media (prefers-reduced-motion: reduce) { .ask-input .caret { animation: none; } }
+  .ask-btn {
+    border: none; border-radius: 9px; padding: 11px 22px;
+    background: var(--accent); color: var(--page);
+    font-weight: 600; font-size: 14px;
+  }
+  .ask-answer {
+    margin-top: 14px; padding-top: 14px; border-top: 1px dashed var(--line);
+    display: flex; gap: 14px; align-items: flex-start; flex-wrap: wrap;
+  }
+  .tool-chip {
+    font-family: var(--mono); font-size: 11.5px; white-space: nowrap;
+    background: var(--accent-wash); color: var(--accent-ink);
+    border: 1px solid var(--line-soft); border-radius: 6px;
+    padding: 4px 9px;
+  }
+  .ask-answer p { margin: 2px 0 0; color: var(--ink-2); max-width: 62ch; }
+  .ask-answer strong { color: var(--ink); font-weight: 600; }
+
+  /* ============ stat tiles ============ */
+  .tiles {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;
+    margin-top: 18px;
+  }
+  .tile {
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: 12px; padding: 14px 16px 15px;
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .tile .value { font-size: 30px; font-weight: 650; line-height: 1.05; letter-spacing: -0.01em; }
+  .tile .value small { font-size: 15px; font-weight: 500; color: var(--ink-2); }
+  .tile .note { font-size: 12px; color: var(--muted); }
+  .tile .note.alert { color: var(--critical); font-weight: 600; }
+
+  /* ============ main grid & cards ============ */
+  .grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+    margin-top: 14px; align-items: start;
+  }
+  .col { display: grid; gap: 14px; }
+  .card {
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: 12px; padding: 16px 18px 14px;
+  }
+  .card-head {
+    display: flex; align-items: baseline; gap: 10px;
+    margin-bottom: 12px;
+  }
+  .card-head h2 { margin: 0; font-size: 15px; font-weight: 650; letter-spacing: -0.005em; }
+  .card-head .count {
+    font-family: var(--mono); font-size: 11.5px; color: var(--muted);
+  }
+
+  /* -------- due list -------- */
+  .row {
+    display: flex; align-items: center; gap: 12px;
+    padding: 9px 2px; border-top: 1px solid var(--line-soft);
+  }
+  .row:first-of-type { border-top: none; }
+  .type {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.06em;
+    text-transform: uppercase; color: var(--ink-2);
+    min-width: 92px;
+  }
+  .type .dot { width: 8px; height: 8px; border-radius: 2px; }
+  .type.hw .dot   { background: var(--cat-1); }
+  .type.quiz .dot { background: var(--cat-2); }
+  .type.proj .dot { background: var(--cat-3); }
+  .row .what { flex: 1; min-width: 0; }
+  .row .what .title { font-weight: 550; }
+  .row .what .course { font-family: var(--mono); font-size: 11.5px; color: var(--muted); }
+  .due {
+    font-family: var(--mono); font-size: 11.5px; white-space: nowrap;
+    display: inline-flex; align-items: center; gap: 6px; color: var(--ink-2);
+  }
+  .due::before { content: ""; width: 7px; height: 7px; border-radius: 50%; }
+  .due.today    { color: var(--critical); font-weight: 700; }
+  .due.today::before { background: var(--critical); }
+  .due.soon     { color: var(--ink); }
+  .due.soon::before  { background: var(--serious); }
+  .due.later::before { background: var(--track); }
+
+  /* -------- exams -------- */
+  .exam { display: flex; align-items: center; gap: 14px; padding: 9px 2px; border-top: 1px solid var(--line-soft); }
+  .exam:first-of-type { border-top: none; }
+  .datebox {
+    font-family: var(--mono); text-align: center; line-height: 1.1;
+    border: 1px solid var(--line); border-radius: 8px;
+    padding: 6px 0; width: 52px; background: var(--surface-2);
+  }
+  .datebox .mon { font-size: 9.5px; letter-spacing: 0.12em; color: var(--accent-ink); text-transform: uppercase; }
+  .datebox .day { font-size: 18px; font-weight: 700; }
+  .exam .what { flex: 1; }
+  .exam .kind { font-family: var(--mono); font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+  .exam .in { font-family: var(--mono); font-size: 11.5px; color: var(--ink-2); white-space: nowrap; }
+
+  /* -------- requirement meters -------- */
+  .req { padding: 10px 2px; border-top: 1px solid var(--line-soft); }
+  .req:first-of-type { border-top: none; }
+  .req-top { display: flex; align-items: baseline; gap: 10px; margin-bottom: 7px; }
+  .req-top .name { font-weight: 550; flex: 1; }
+  .req-top .cat {
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--muted);
+    border: 1px solid var(--line-soft); border-radius: 4px; padding: 2px 6px;
+  }
+  .req-top .credits { font-family: var(--mono); font-size: 12px; color: var(--ink-2); }
+  .meter {
+    height: 6px; border-radius: 3px; background: var(--track);
+    overflow: hidden;
+  }
+  .meter .fill {
+    height: 100%; border-radius: 3px; background: var(--accent);
+    min-width: 6px;
+  }
+  .req.done .meter .fill { background: var(--good); }
+  .req.done .req-top .credits::after { content: " ✓"; color: var(--good); font-weight: 700; }
+
+  /* -------- blocked courses -------- */
+  .blocked { padding: 10px 2px; border-top: 1px solid var(--line-soft); }
+  .blocked:first-of-type { border-top: none; }
+  .blocked-top { display: flex; align-items: baseline; gap: 10px; }
+  .blocked-top .code { font-family: var(--mono); font-weight: 700; }
+  .blocked-top .name { color: var(--ink-2); flex: 1; }
+  .missing { margin-top: 6px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .missing .label { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+  .prereq {
+    font-family: var(--mono); font-size: 11.5px;
+    border: 1px solid var(--line); border-radius: 6px; padding: 3px 8px;
+    display: inline-flex; align-items: center; gap: 6px; color: var(--ink-2);
+  }
+  .prereq.miss { color: var(--critical); border-color: var(--critical); }
+  .prereq.ok   { color: var(--ink-2); }
+  .prereq.ok::after { content: "✓"; color: var(--good); }
+  .prereq.miss::after { content: "✗"; font-weight: 700; }
+
+  /* ============ ontology strip ============ */
+  .ontology { margin-top: 14px; }
+  .ontology .card { padding-bottom: 16px; }
+  .edges { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 4px; }
+  .edge {
+    font-family: var(--mono); font-size: 11.5px; white-space: nowrap;
+    border: 1px solid var(--line-soft); border-radius: 8px;
+    background: var(--surface-2); padding: 9px 12px;
+    display: flex; flex-direction: column; gap: 3px;
+  }
+  .edge .rel { color: var(--ink); }
+  .edge .rel b { color: var(--accent-ink); font-weight: 700; }
+  .edge .rel .obj { font-weight: 600; }
+  .edge .props { color: var(--muted); font-size: 10.5px; }
+
+  /* ============ footer ============ */
+  footer {
+    margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--line);
+    display: flex; gap: 18px; flex-wrap: wrap; align-items: center;
+    font-family: var(--mono); font-size: 11px; color: var(--muted);
+  }
+  footer .ok::before { content: "●"; color: var(--good); margin-right: 6px; }
+  footer .spacer { flex: 1; }
+
+  /* ============ responsive ============ */
+  @media (max-width: 900px) {
+    .tiles { grid-template-columns: repeat(2, 1fr); }
+    .grid { grid-template-columns: 1fr; }
+    header { flex-wrap: wrap; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div>
+      <div class="wordmark">purdo<span class="cursor">▮</span></div>
+      <div class="eyebrow">ontology planner</div>
+    </div>
+    <div class="tagline">Purdue coursework as objects, properties &amp; links — queryable in plain English</div>
+    <div class="spacer"></div>
+    <div class="student-chip"><span class="avatar">A</span> aaen · CS · junior · fall 2026</div>
+    <button class="theme-btn" id="themeBtn" aria-label="Toggle color theme">theme</button>
+  </header>
+
+  <!-- ============ natural-language ask box ============ -->
+  <section class="ask" aria-label="Ask the ontology">
+    <div class="eyebrow" style="margin-bottom:10px">ask the ontology</div>
+    <div class="ask-row">
+      <div class="ask-input">
+        <span class="prompt-glyph">&gt;</span>
+        <span class="q">what's standing between me and graduation?<span class="caret"></span></span>
+      </div>
+      <button class="ask-btn">Ask</button>
+    </div>
+    <div class="ask-answer">
+      <span class="tool-chip">tool: unsatisfied_requirements</span>
+      <span class="tool-chip">0 SQL written by the model</span>
+      <p>You need <strong>12 more core credits</strong> and <strong>6 elective credits</strong>.
+         The fastest path runs through <strong>CS 381</strong> — but it's blocked until
+         <strong>CS 252</strong> is completed this semester.</p>
+    </div>
+  </section>
+
+  <!-- ============ stat tiles ============ -->
+  <section class="tiles" aria-label="Overview">
+    <div class="tile">
+      <span class="eyebrow">credits completed</span>
+      <span class="value num">76 <small>/ 120</small></span>
+      <span class="note">63% of degree</span>
+    </div>
+    <div class="tile">
+      <span class="eyebrow">in progress</span>
+      <span class="value num">13</span>
+      <span class="note">4 courses · summer/fall 2026</span>
+    </div>
+    <div class="tile">
+      <span class="eyebrow">requirements satisfied</span>
+      <span class="value num">5 <small>/ 9</small></span>
+      <span class="note">2 close to done</span>
+    </div>
+    <div class="tile">
+      <span class="eyebrow">due this week</span>
+      <span class="value num">5</span>
+      <span class="note alert">1 due today</span>
+    </div>
+  </section>
+
+  <div class="grid">
+    <div class="col">
+
+      <!-- ============ due this week ============ -->
+      <section class="card" aria-label="Due this week">
+        <div class="card-head">
+          <h2>Due this week</h2>
+          <span class="count">jul 6 – jul 12 · 5 items</span>
+        </div>
+        <div class="row">
+          <span class="type hw"><span class="dot"></span>homework</span>
+          <span class="what"><span class="title">HW 5 — Malloc lab</span><br><span class="course">CS 252 · Systems Programming</span></span>
+          <span class="due today">today 11:59 pm</span>
+        </div>
+        <div class="row">
+          <span class="type quiz"><span class="dot"></span>quiz</span>
+          <span class="what"><span class="title">Quiz 7 — Sampling distributions</span><br><span class="course">STAT 350 · Intro to Statistics</span></span>
+          <span class="due soon">fri jul 10</span>
+        </div>
+        <div class="row">
+          <span class="type hw"><span class="dot"></span>homework</span>
+          <span class="what"><span class="title">Problem set 6</span><br><span class="course">STAT 350 · Intro to Statistics</span></span>
+          <span class="due soon">sat jul 11</span>
+        </div>
+        <div class="row">
+          <span class="type proj"><span class="dot"></span>project</span>
+          <span class="what"><span class="title">Shell project — checkpoint 2</span><br><span class="course">CS 252 · Systems Programming</span></span>
+          <span class="due later">sun jul 12</span>
+        </div>
+        <div class="row">
+          <span class="type hw"><span class="dot"></span>homework</span>
+          <span class="what"><span class="title">Reading response 3</span><br><span class="course">COM 217 · Science Writing</span></span>
+          <span class="due later">sun jul 12</span>
+        </div>
+      </section>
+
+      <!-- ============ upcoming exams ============ -->
+      <section class="card" aria-label="Upcoming exams">
+        <div class="card-head">
+          <h2>Upcoming exams</h2>
+          <span class="count">next 14 days</span>
+        </div>
+        <div class="exam">
+          <div class="datebox"><div class="mon">jul</div><div class="day num">17</div></div>
+          <span class="what"><span class="kind">midterm</span><br><strong>STAT 350</strong> — Exam 2 · chapters 5–8</span>
+          <span class="in">in 8 days</span>
+        </div>
+        <div class="exam">
+          <div class="datebox"><div class="mon">jul</div><div class="day num">21</div></div>
+          <span class="what"><span class="kind">midterm</span><br><strong>CS 252</strong> — Midterm 2 · memory &amp; processes</span>
+          <span class="in">in 12 days</span>
+        </div>
+      </section>
+
+    </div>
+    <div class="col">
+
+      <!-- ============ degree requirements ============ -->
+      <section class="card" aria-label="Degree requirements">
+        <div class="card-head">
+          <h2>Degree requirements</h2>
+          <span class="count">via SATISFIES links · completed courses only</span>
+        </div>
+        <div class="req">
+          <div class="req-top"><span class="name">CS Core</span><span class="cat">core</span><span class="credits num">29 / 41 cr</span></div>
+          <div class="meter"><div class="fill" style="width:71%"></div></div>
+        </div>
+        <div class="req done">
+          <div class="req-top"><span class="name">Mathematics</span><span class="cat">core</span><span class="credits num">17 / 17 cr</span></div>
+          <div class="meter"><div class="fill" style="width:100%"></div></div>
+        </div>
+        <div class="req">
+          <div class="req-top"><span class="name">CS Electives (track)</span><span class="cat">elective</span><span class="credits num">6 / 12 cr</span></div>
+          <div class="meter"><div class="fill" style="width:50%"></div></div>
+        </div>
+        <div class="req">
+          <div class="req-top"><span class="name">Science Sequence</span><span class="cat">core</span><span class="credits num">8 / 12 cr</span></div>
+          <div class="meter"><div class="fill" style="width:67%"></div></div>
+        </div>
+        <div class="req">
+          <div class="req-top"><span class="name">General Education</span><span class="cat">gen ed</span><span class="credits num">12 / 18 cr</span></div>
+          <div class="meter"><div class="fill" style="width:67%"></div></div>
+        </div>
+        <div class="req done">
+          <div class="req-top"><span class="name">First-Year Writing</span><span class="cat">gen ed</span><span class="credits num">6 / 6 cr</span></div>
+          <div class="meter"><div class="fill" style="width:100%"></div></div>
+        </div>
+      </section>
+
+      <!-- ============ blocked courses ============ -->
+      <section class="card" aria-label="Blocked courses">
+        <div class="card-head">
+          <h2>Blocked by prerequisites</h2>
+          <span class="count">via PREREQUISITE_OF edges</span>
+        </div>
+        <div class="blocked">
+          <div class="blocked-top"><span class="code">CS 381</span><span class="name">Analysis of Algorithms</span></div>
+          <div class="missing">
+            <span class="label">needs</span>
+            <span class="prereq ok">CS 251</span>
+            <span class="prereq miss">CS 252 — in progress</span>
+          </div>
+        </div>
+        <div class="blocked">
+          <div class="blocked-top"><span class="code">CS 448</span><span class="name">Intro to Relational Databases</span></div>
+          <div class="missing">
+            <span class="label">needs</span>
+            <span class="prereq ok">CS 240</span>
+            <span class="prereq miss">CS 381 — not taken</span>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- ============ ontology strip ============ -->
+  <section class="ontology" aria-label="Ontology schema">
+    <div class="card">
+      <div class="card-head">
+        <h2>The ontology</h2>
+        <span class="count">6 object types · 6 link types · introspectable at /ontology</span>
+      </div>
+      <div class="edges">
+        <div class="edge"><span class="rel"><span class="obj">Student</span> —<b>ENROLLED_IN</b>→ <span class="obj">Course</span></span><span class="props">props: status, grade</span></div>
+        <div class="edge"><span class="rel"><span class="obj">Course</span> —<b>SATISFIES</b>→ <span class="obj">Requirement</span></span><span class="props">props: credits_applied</span></div>
+        <div class="edge"><span class="rel"><span class="obj">Course</span> —<b>PREREQUISITE_OF</b>→ <span class="obj">Course</span></span><span class="props">self-referential</span></div>
+        <div class="edge"><span class="rel"><span class="obj">Course</span> —<b>OFFERED_IN</b>→ <span class="obj">Semester</span></span><span class="props">—</span></div>
+        <div class="edge"><span class="rel"><span class="obj">Assignment</span> —<b>BELONGS_TO</b>→ <span class="obj">Course</span></span><span class="props">—</span></div>
+        <div class="edge"><span class="rel"><span class="obj">Exam</span> —<b>BELONGS_TO</b>→ <span class="obj">Course</span></span><span class="props">—</span></div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span class="ok">fastapi :8000/docs</span>
+    <span class="ok">sqlite · purdo.db</span>
+    <span class="ok">claude · tool-use router</span>
+    <span class="spacer"></span>
+    <span>static mockup — the real dashboard gets built in lesson 10</span>
+  </footer>
+
+</div>
+<script>
+  // Theme toggle: stamps data-theme on <html>; tokens do the rest.
+  const root = document.documentElement;
+  document.getElementById("themeBtn").addEventListener("click", () => {
+    const dark = matchMedia("(prefers-color-scheme: dark)").matches;
+    const cur = root.dataset.theme || (dark ? "dark" : "light");
+    root.dataset.theme = cur === "dark" ? "light" : "dark";
+  });
+</script>
+</body>
+</html>
