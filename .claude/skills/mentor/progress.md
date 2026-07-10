@@ -2,6 +2,20 @@
 
 Current lesson: **L1 — db.py (engine, sessionmaker, Base)**
 
+## Weekly schedule (set 2026-07-09; ~3 sessions/week, adjust if a week slips)
+
+| Week | Dates | Lessons | Milestone — "done" means |
+|---|---|---|---|
+| 1 | Jul 9 – Jul 15 | L1, L2, L3 | Schema exists: `create_all` builds every object + link table |
+| 2 | Jul 16 – Jul 22 | L4, L5 | Seeded DB with real transcript; ontology introspectable; tag v0.1 |
+| 3 | Jul 23 – Jul 29 | L6, L7, L8 | All four query functions answer correctly against seed data |
+| 4 | Jul 30 – Aug 5 | L9, L10 | Dashboard demo: Streamlit → FastAPI → SQLite end to end; tag v0.2 |
+| 5 | Aug 6 – Aug 12 | L11, L12 | NL ask box works; README screenshots; mock interview passed; tag v1.0 |
+| — | Aug 13 – Aug 19 | buffer | Slack for slippage, else start Brightspace research (Phase 5) |
+
+Rule: a week's milestone must pass its checkpoint questions before the next
+week starts — schedule slips, quality doesn't.
+
 | Lesson | Status | Date | Notes |
 |---|---|---|---|
 | L1 db.py | not started | | |
