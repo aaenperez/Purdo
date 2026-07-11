@@ -1,6 +1,6 @@
 # Purdo learning log
 
-Current lesson: **L1 — db.py (engine, sessionmaker, Base)**
+Current lesson: **L2 — object models in models.py**
 
 ## Weekly schedule (set 2026-07-09; ~3 sessions/week, adjust if a week slips)
 
@@ -18,7 +18,7 @@ week starts — schedule slips, quality doesn't.
 
 | Lesson | Status | Date | Notes |
 |---|---|---|---|
-| L1 db.py | not started | | |
+| L1 db.py | done | 2026-07-10 | Debugged package-name + string-vs-variable errors well. CHECKPOINT NOT PASSED: asked for answers instead of answering (one-engine/many-sessions, lazy connect, single Base) — RE-ASK at start of L2 before teaching. |
 | L2 object models | not started | | |
 | L3 link tables | not started | | |
 | L4 registry | not started | | |
