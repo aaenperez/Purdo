@@ -35,4 +35,7 @@ week starts — schedule slips, quality doesn't.
 (nothing yet)
 
 ## Takeovers (code Claude wrote instead of the user)
-(none — keep it that way where possible)
+- 2026-07-10 (L2 step 4): 3 enums + Assignment/Exam models — repetitive-pattern
+  takeover at user's request (rule 2 amended same day). User had written the
+  enum + model patterns himself in steps 1-3; ForeignKey was newly taught but
+  not yet typed by him. Spot-check FK understanding at L3 start.
