@@ -72,6 +72,19 @@ class ExamType(enum.Enum):
     MIDTERM = "midterm"
     FINAL = "final"
 
+class EnrollmentStatus(enum.Enum):
+    COMPLETED = "completed"
+    IN_PROGRESS = "in_progress"
+    PLANNED = "planned"
+
+class Enrollment(Base):
+    __tablename__ = "enrollments"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    student_id: Mapped[int] = mapped_column(ForeignKey("students.id"))
+    course_id: Mapped[int] = mapped_column(ForeignKey("courses.id"))
+    status: Mapped[EnrollmentStatus]
+    grade: Mapped[str | None]
+
 class Assignment(Base):
     __tablename__ = "assignments"
     id: Mapped[int] = mapped_column(primary_key=True)
@@ -88,6 +101,26 @@ class Exam(Base):
     course_id: Mapped[int] = mapped_column(ForeignKey("courses.id"))
     date: Mapped[date]
     type: Mapped[ExamType]
+
+    
+class Satisfies(Base):
+    __tablename__ = "satisfies"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    course_id: Mapped[int] = mapped_column(ForeignKey("courses.id"))
+    requirement_id: Mapped[int] = mapped_column(ForeignKey("requirements.id"))
+    credits_applied: Mapped[int]
+
+class Offering(Base):
+    __tablename__ = "offerings"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    course_id: Mapped[int] = mapped_column(ForeignKey("courses.id"))
+    semester_id: Mapped[int] = mapped_column(ForeignKey("semesters.id"))
+
+class Prerequisite(Base):
+    __tablename__ = "prerequisites"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    course_id: Mapped[int] = mapped_column(ForeignKey("courses.id"))
+    prerequisite_course_id: Mapped[int] = mapped_column(ForeignKey("courses.id"))
 
 
 
