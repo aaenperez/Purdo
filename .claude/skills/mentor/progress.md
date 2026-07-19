@@ -1,6 +1,6 @@
 # Purdo learning log
 
-Current lesson: **L5 — seed data (real transcript)**
+Current lesson: **L6 — first queries (due this week, upcoming exams)**
 
 ## Weekly schedule (set 2026-07-09; ~3 sessions/week, adjust if a week slips)
 
@@ -22,7 +22,7 @@ week starts — schedule slips, quality doesn't.
 | L2 object models | done | 2026-07-10 | 4/6 solo; `:` vs `=` stumble |
 | L3 link tables | done | 2026-07-10 | all solo; checkpoint PASSED |
 | L4 registry | done | 2026-07-18 | models solo; heavy takeover on functions — verify kwargs/query at L5 |
-| L5 seed data | not started | | |
+| L5 seed data | done | 2026-07-19 | real audit seeded; credits cross-check 95 ✓; takeover per new policy |
 | L6 due/exams queries | not started | | |
 | L7 unsatisfied reqs | not started | | |
 | L8 blocked courses | not started | | |
@@ -37,5 +37,6 @@ week starts — schedule slips, quality doesn't.
 ## Takeovers (code Claude wrote instead of the user)
 - 07-10 L2: enums + Assignment/Exam. FK spot-check later passed.
 - 07-18 L4: 12 registry entries. Kwargs/add/commit untyped by him — L5 uses this pattern, no takeover there.
+- 07-19 L5: full seed.py (his real audit data). Kwargs/add/commit STILL never typed by him — weave into L6.
 
 Log style: one line per entry, max ~15 words. Extremely concise.
