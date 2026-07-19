@@ -15,3 +15,26 @@ Claude tool-use layer can all share them. Spec:
 - upcoming_exams(session, days: int = 14) -> exams within the window for
   in-progress courses.
 """
+
+from datetime import timedelta
+from sqlalchemy import select
+from purdo.ontology.models import Assignment, Course, AssignmentStatus, Exam
+
+def due_this_week(session, today):
+    end = timedelta(7) + today
+    stmt = (select(Assignment, Course)
+            .join(Course, Assignment.course_id == Course.id)
+            .where(Assignment.due_date >= today)
+            .where(Assignment.due_date <= end)
+            .where(Assignment.status == AssignmentStatus.TODO)
+            .order_by(Assignment.due_date))
+    return list(session.execute(stmt))
+
+def upcoming_exams(session, today, days = 28):
+    end = timedelta(days) + today
+    stmt = (select(Exam, Course)
+            .join(Course, Exam.course_id == Course.id)
+            .where(Exam.date >= today)
+            .where(Exam.date <= end)
+            .order_by(Exam.date))
+    return list(session.execute(stmt))
