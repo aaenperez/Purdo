@@ -1,6 +1,6 @@
 # Purdo learning log
 
-Current lesson: **L4 — ontology registry (registry.py)**
+Current lesson: **L5 — seed data (real transcript)**
 
 ## Weekly schedule (set 2026-07-09; ~3 sessions/week, adjust if a week slips)
 
@@ -18,10 +18,10 @@ week starts — schedule slips, quality doesn't.
 
 | Lesson | Status | Date | Notes |
 |---|---|---|---|
-| L1 db.py | done | 2026-07-10 | Debugged package-name + string-vs-variable errors well. CHECKPOINT NOT PASSED: asked for answers instead of answering (one-engine/many-sessions, lazy connect, single Base) — RE-ASK at start of L2 before teaching. |
-| L2 object models | done | 2026-07-10 | Wrote 4/6 models solo; annotation-vs-assignment (`:` vs `=`) was the big stumble. Fatigued by step 4 → takeover. L1 checkpoint concepts still shaky — re-weave into L3, don't re-quiz cold. |
-| L3 link tables | done | 2026-07-10 | All 4 link tables written by Aaen. Two copy-paste FK bugs (student.id, semesters.id) — caught with hints only. CHECKPOINT PASSED (link properties + self-ref direction, own words). Chronic unsaved-file issue → auto-save enabled. Week 1 milestone hit 5 days early. |
-| L4 registry | not started | | |
+| L1 db.py | done | 2026-07-10 | checkpoint skipped (answers given) |
+| L2 object models | done | 2026-07-10 | 4/6 solo; `:` vs `=` stumble |
+| L3 link tables | done | 2026-07-10 | all solo; checkpoint PASSED |
+| L4 registry | done | 2026-07-18 | models solo; heavy takeover on functions — verify kwargs/query at L5 |
 | L5 seed data | not started | | |
 | L6 due/exams queries | not started | | |
 | L7 unsatisfied reqs | not started | | |
@@ -35,7 +35,7 @@ week starts — schedule slips, quality doesn't.
 (nothing yet)
 
 ## Takeovers (code Claude wrote instead of the user)
-- 2026-07-10 (L2 step 4): 3 enums + Assignment/Exam models — repetitive-pattern
-  takeover at user's request (rule 2 amended same day). User had written the
-  enum + model patterns himself in steps 1-3; ForeignKey was newly taught but
-  not yet typed by him. Spot-check FK understanding at L3 start.
+- 07-10 L2: enums + Assignment/Exam. FK spot-check later passed.
+- 07-18 L4: 12 registry entries. Kwargs/add/commit untyped by him — L5 uses this pattern, no takeover there.
+
+Log style: one line per entry, max ~15 words. Extremely concise.
