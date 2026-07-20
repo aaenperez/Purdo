@@ -17,8 +17,8 @@ Claude tool-use layer can all share them. Spec:
 """
 
 from datetime import timedelta
-from sqlalchemy import select
-from purdo.ontology.models import Assignment, Course, AssignmentStatus, Exam
+from sqlalchemy import select, func
+from purdo.ontology.models import Assignment, Course, AssignmentStatus, Exam, Requirement, Satisfies, Enrollment, EnrollmentStatus
 
 def due_this_week(session, today):
     end = timedelta(7) + today
@@ -38,3 +38,23 @@ def upcoming_exams(session, today, days = 28):
             .where(Exam.date <= end)
             .order_by(Exam.date))
     return list(session.execute(stmt))
+
+def unsatisfied_requirements(session):
+    # step 1: credits earned per requirement, counting only completed courses
+    earned = (select(Satisfies.requirement_id,
+                     func.sum(Satisfies.credits_applied).label("credits"))
+              .join(Enrollment, Enrollment.course_id == Satisfies.course_id)
+              .where(Enrollment.status == EnrollmentStatus.COMPLETED)
+              .group_by(Satisfies.requirement_id)
+              .subquery())
+
+    # step 2: attach those totals to EVERY requirement, even ones with none
+    stmt = (select(Requirement.name, Requirement.credits_needed,
+                   func.coalesce(earned.c.credits, 0))
+            .outerjoin(earned, earned.c.requirement_id == Requirement.id)
+            .order_by(Requirement.name))
+
+    return [{"requirement": name, "needed": needed, "earned": got,
+             "remaining": needed - got}
+            for name, needed, got in session.execute(stmt)
+            if got < needed]

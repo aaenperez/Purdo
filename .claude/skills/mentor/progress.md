@@ -1,6 +1,6 @@
 # Purdo learning log
 
-Current lesson: **L7 — unsatisfied_requirements**
+Current lesson: **L8 — blocked_courses**
 
 ## Weekly schedule (set 2026-07-09; ~3 sessions/week, adjust if a week slips)
 
@@ -24,7 +24,7 @@ week starts — schedule slips, quality doesn't.
 | L4 registry | done | 2026-07-18 | models solo; heavy takeover on functions — verify kwargs/query at L5 |
 | L5 seed data | done | 2026-07-19 | real audit seeded; credits cross-check 95 ✓; takeover per new policy |
 | L6 due/exams queries | done | 2026-07-19 | exams solo after scaffold; joins shaky then explained — recheck L7 |
-| L7 unsatisfied reqs | not started | | |
+| L7 unsatisfied reqs | done | 2026-07-19 | joins solo, where blank given; subquery/outerjoin by Claude |
 | L8 blocked courses | not started | | |
 | L9 FastAPI | not started | | |
 | L10 Streamlit | not started | | |
@@ -32,7 +32,11 @@ week starts — schedule slips, quality doesn't.
 | L12 ask box + polish | not started | | |
 
 ## Struggles / revisit
-(nothing yet)
+- Joins: needed heavy scaffolding L6-L7. Improving (2nd join solo at L7). Recheck at L8.
+
+## Open items
+- seed.py: no SATISFIES rows for "Degree Total" -> shows 0/120. Decide fix.
+- due_this_week/upcoming_exams return ORM objects; normalize to dicts at L9.
 
 ## Takeovers (code Claude wrote instead of the user)
 - 07-10 L2: enums + Assignment/Exam. FK spot-check later passed.
