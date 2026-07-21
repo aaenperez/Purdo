@@ -17,8 +17,9 @@ Claude tool-use layer can all share them. Spec:
 """
 
 from datetime import timedelta
-from sqlalchemy import select, func
-from purdo.ontology.models import Assignment, Course, AssignmentStatus, Exam, Requirement, Satisfies, Enrollment, EnrollmentStatus
+from sqlalchemy import select, func, or_
+from sqlalchemy.orm import aliased
+from purdo.ontology.models import Assignment, Course, AssignmentStatus, Exam, Requirement, Satisfies, Enrollment, EnrollmentStatus, Prerequisite
 
 def due_this_week(session, today):
     end = timedelta(7) + today
@@ -58,3 +59,16 @@ def unsatisfied_requirements(session):
              "remaining": needed - got}
             for name, needed, got in session.execute(stmt)
             if got < needed]
+
+def blocked_courses(session):
+    Prereq = aliased(Course)
+    PrereqEnr = aliased(Enrollment)
+    stmt = (select(Course.code, Prereq.code)
+            .join(Enrollment, Enrollment.course_id == Course.id)
+            .join(Prerequisite, Prerequisite.course_id == Course.id)
+            .join(Prereq, Prerequisite.prerequisite_course_id == Prereq.id)
+            .outerjoin(PrereqEnr,PrereqEnr.course_id == Prereq.id)
+            .where(Enrollment.status == EnrollmentStatus.PLANNED)
+            .where(or_(PrereqEnr.status != EnrollmentStatus.COMPLETED,
+                       PrereqEnr.status == None)))
+    return list(session.execute(stmt))

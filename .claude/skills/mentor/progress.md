@@ -1,6 +1,6 @@
 # Purdo learning log
 
-Current lesson: **L8 — blocked_courses**
+Current lesson: **L9 — FastAPI**
 
 ## Weekly schedule (set 2026-07-09; ~3 sessions/week, adjust if a week slips)
 
@@ -25,7 +25,7 @@ week starts — schedule slips, quality doesn't.
 | L5 seed data | done | 2026-07-19 | real audit seeded; credits cross-check 95 ✓; takeover per new policy |
 | L6 due/exams queries | done | 2026-07-19 | exams solo after scaffold; joins shaky then explained — recheck L7 |
 | L7 unsatisfied reqs | done | 2026-07-19 | joins solo, where blank given; subquery/outerjoin by Claude |
-| L8 blocked courses | not started | | |
+| L8 blocked courses | done | 2026-07-20 | self-join + outerjoin; solo joins w/ typo fixes; verify caught missing PLANNED filter |
 | L9 FastAPI | not started | | |
 | L10 Streamlit | not started | | |
 | L11 Claude tool use | not started | | |
