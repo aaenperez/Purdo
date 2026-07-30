@@ -11,7 +11,9 @@
       "Read(//c/Users/aaenp/**)",
       "Bash(uv run *)",
       "Bash(curl -s http://localhost:8501/_stcore/health)",
-      "Bash(grep -c \"^\\\\.env$\")"
+      "Bash(grep -c \"^\\\\.env$\")",
+      "Bash(curl -s -m 3 http://localhost:8501/_stcore/health)",
+      "Bash(tasklist)"
     ]
   }
 }

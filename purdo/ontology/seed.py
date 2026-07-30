@@ -122,6 +122,8 @@ REQUIREMENTS = {
 
 SATISFIES = {
     # requirement: [course codes]
+    # every course counts toward the degree total, so this bucket is all of them
+    "Degree Total": list(COURSES),
     "CS Major Core": ["CS 18000", "CS 18200", "CS 24000", "CS 25000",
                       "CS 25100", "CS 25200", "MA 26100", "MA 26500"],
     "University Core Curriculum": ["ENGL 10600", "SCLA 10200", "STAT 30100",
