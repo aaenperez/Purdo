@@ -1,6 +1,9 @@
 # Purdo learning log
 
-Current lesson: **L9 — FastAPI**
+Current lesson: **polish — cards, Degree Total data fix, then L9 FastAPI**
+
+Order changed 2026-07-29: after an honest audit (3 layers were empty stubs),
+skipped L9 to build the NL demo first. FastAPI now comes last.
 
 ## Weekly schedule (set 2026-07-09; ~3 sessions/week, adjust if a week slips)
 
@@ -28,8 +31,9 @@ week starts — schedule slips, quality doesn't.
 | L8 blocked courses | done | 2026-07-20 | self-join + outerjoin; solo joins w/ typo fixes; verify caught missing PLANNED filter |
 | L9 FastAPI | not started | | |
 | L10 Streamlit | not started | | |
-| L11 Claude tool use | not started | | |
-| L12 ask box + polish | not started | | |
+| L11 Claude tool use | done | 2026-07-29 | takeover; loop explained 4x before it landed — analogy worked |
+| L12 ask box | done | 2026-07-29 | Streamlit ask box solo; dict vs object + sys.path stumbles |
+| L9 FastAPI | not started | | deferred — demo first |
 
 ## Struggles / revisit
 - Joins: needed heavy scaffolding L6-L7. Improving (2nd join solo at L7). Recheck at L8.

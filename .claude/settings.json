@@ -4,7 +4,14 @@
       "Bash(uv run python -c ' *)",
       "Edit(/.claude/skills/mentor/**)",
       "Bash(git add *)",
-      "Bash(git commit *)"
+      "Bash(git commit *)",
+      "Skill(claude-api)",
+      "Skill(claude-api:*)",
+      "Bash(uv sync *)",
+      "Read(//c/Users/aaenp/**)",
+      "Bash(uv run *)",
+      "Bash(curl -s http://localhost:8501/_stcore/health)",
+      "Bash(grep -c \"^\\\\.env$\")"
     ]
   }
 }

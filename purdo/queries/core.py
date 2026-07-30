@@ -29,7 +29,8 @@ def due_this_week(session, today):
             .where(Assignment.due_date <= end)
             .where(Assignment.status == AssignmentStatus.TODO)
             .order_by(Assignment.due_date))
-    return list(session.execute(stmt))
+    return [{"title": a.title, "course": c.code, "due": a.due_date.isoformat(), "type": a.type.value}
+            for a, c in session.execute(stmt)]
 
 def upcoming_exams(session, today, days = 28):
     end = timedelta(days) + today
@@ -38,7 +39,8 @@ def upcoming_exams(session, today, days = 28):
             .where(Exam.date >= today)
             .where(Exam.date <= end)
             .order_by(Exam.date))
-    return list(session.execute(stmt))
+    return [{"title": e.title, "course": c.code, "date": e.date.isoformat(), "type": e.type.value}
+            for e, c in session.execute(stmt)]
 
 def unsatisfied_requirements(session):
     # step 1: credits earned per requirement, counting only completed courses
@@ -71,4 +73,5 @@ def blocked_courses(session):
             .where(Enrollment.status == EnrollmentStatus.PLANNED)
             .where(or_(PrereqEnr.status != EnrollmentStatus.COMPLETED,
                        PrereqEnr.status == None)))
-    return list(session.execute(stmt))
+    return [{"course": code, "missing_prereq": prereq}
+            for code, prereq in session.execute(stmt)]

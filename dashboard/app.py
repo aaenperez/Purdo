@@ -8,3 +8,19 @@ YOU WRITE THIS (Lessons 10 & 12). Spec:
 
 Run: uv run streamlit run dashboard/app.py
 """
+import streamlit as st
+from purdo.db import get_session
+from purdo.nl.ask import ask
+
+st.title("Purdo")
+st.caption("Ontology-driven academic planner")
+
+question = st.text_input("Ask about your degree")
+
+if question:
+    with st.spinner("Thinking..."):
+        result = ask(question)
+    st.write(result["answer"])
+    st.caption(f"tool used: {result['tool_used']}")
+    with st.expander("Raw data"):
+        st.write(result["data"])
