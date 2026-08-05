@@ -1,10 +1,8 @@
-"""Database setup: engine, session factory, and the declarative Base.
+"""Database setup.
 
-YOU WRITE THIS (Lesson 1). Spec:
-- A SQLAlchemy engine pointing at sqlite:///purdo.db (path configurable via
-  the DATABASE_URL env var, python-dotenv loaded).
-- A session factory (sessionmaker) and a `get_session()` helper.
-- The DeclarativeBase subclass `Base` that all models inherit from.
+- Engine and session factory for the SQLite store; the path comes from
+  DATABASE_URL so the backend can be swapped without touching the models.
+- `Base`, the declarative base every model inherits from.
 """
 import os
 from dotenv import load_dotenv

@@ -1,13 +1,9 @@
-"""The ontology registry: object types and link types as queryable metadata.
+"""The ontology registry: the schema stored as queryable data.
 
-YOU WRITE THIS (Lesson 4). Spec:
-- ObjectType(name, table_name, description)
-- LinkType(name, source_type, target_type, table_name, description,
-  properties_json)  # e.g. ENROLLED_IN carries ["status", "grade"]
-- A register_ontology(session) function that populates both tables from the
-  models in models.py.
-- describe_ontology(session) -> str: a human/LLM-readable summary of the whole
-  ontology. This string later becomes part of the Claude system prompt.
+- ObjectType and LinkType rows describe every object and relationship in the
+  model, including which properties each link carries.
+- `describe_ontology()` renders that into text used as the natural-language
+  layer's system prompt, so the schema has exactly one source of truth.
 """
 
 from purdo.db import Base

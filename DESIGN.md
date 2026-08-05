@@ -1,7 +1,7 @@
 # Design Decisions
 
-This file records *why* the project is built the way it is. Every entry should be
-defensible in an interview. Extended after each lesson.
+This file records *why* the project is built the way it is — the alternatives
+considered and the reason each was rejected.
 
 ## D1 — Typed link tables + ontology registry (not a generic edge table, not plain FKs)
 

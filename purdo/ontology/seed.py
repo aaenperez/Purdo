@@ -1,8 +1,10 @@
-"""Seed script: create tables and load Aaen's real transcript.
+"""Builds the schema and loads my transcript.
 
-Data source: Purdue degree audit (2026-07-19) + myPurdue catalog prereqs.
-Simplifications: OR-prerequisites reduced to the path actually taken;
-Fall 2026 assignments/exams are plausible placeholders until Brightspace.
+- Courses, enrollments, requirements, and prerequisite edges come from my
+  Purdue degree audit and the myPurdue catalog; OR-prerequisites are reduced to
+  the path I actually took.
+- Assignments and exams are placeholders until the Brightspace integration
+  lands.
 
 Run: uv run python -m purdo.ontology.seed
 """
