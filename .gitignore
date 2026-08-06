@@ -4,3 +4,6 @@ __pycache__/
 .env
 purdo.db
 .streamlit/secrets.toml
+
+# local agent config / working notes
+.claude/

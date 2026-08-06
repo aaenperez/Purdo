@@ -68,32 +68,34 @@ COURSES = {
 }
 
 COMPLETED = [
-    # (semester, code, grade) — "TR" = AP/transfer credit
+    # (semester, code, grade) — "TR" = AP/transfer credit.
+    # Courses and terms are my real record; the letter grades are illustrative,
+    # since nothing in the query layer reads them.
     ("Summer 2024", "ENGL 10600", "TR"),
     ("Summer 2024", "STAT 30100", "TR"),
     ("Summer 2024", "HIST 10500", "TR"),
     ("Summer 2024", "MA 16500", "TR"),
     ("Summer 2024", "CS 1XXXX", "TR"),
     ("Summer 2024", "PHYS 1XXXX", "TR"),
-    ("Fall 2024", "CS 18000", "B"),
+    ("Fall 2024", "CS 18000", "A-"),
     ("Fall 2024", "CS 19300", "A"),
-    ("Fall 2024", "ECON 21000", "A+"),
-    ("Fall 2024", "EAPS 10600", "A+"),
-    ("Fall 2024", "MA 16200", "B-"),
-    ("Spring 2025", "SCLA 10200", "A+"),
-    ("Spring 2025", "CS 18200", "B"),
-    ("Spring 2025", "CS 24000", "C"),
+    ("Fall 2024", "ECON 21000", "A"),
+    ("Fall 2024", "EAPS 10600", "A"),
+    ("Fall 2024", "MA 16200", "B+"),
+    ("Spring 2025", "SCLA 10200", "A"),
+    ("Spring 2025", "CS 18200", "A-"),
+    ("Spring 2025", "CS 24000", "B+"),
     ("Spring 2025", "MA 26100", "B+"),
-    ("Fall 2025", "EAPS 11100", "A+"),
+    ("Fall 2025", "EAPS 11100", "A"),
     ("Fall 2025", "MA 26500", "A-"),
-    ("Fall 2025", "CS 25000", "B-"),
-    ("Fall 2025", "CS 25100", "B-"),
+    ("Fall 2025", "CS 25000", "B+"),
+    ("Fall 2025", "CS 25100", "A-"),
     ("Fall 2025", "HIST 15200", "A"),
-    ("Spring 2026", "EAPS 11200", "A+"),
+    ("Spring 2026", "EAPS 11200", "A"),
     ("Spring 2026", "CS 25200", "A"),
     ("Spring 2026", "STAT 35000", "A"),
     ("Spring 2026", "POL 32700", "A"),
-    ("Spring 2026", "ANTH 10000", "A+"),
+    ("Spring 2026", "ANTH 10000", "A"),
 ]
 
 IN_PROGRESS = [
