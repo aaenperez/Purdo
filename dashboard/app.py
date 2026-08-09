@@ -1,17 +1,33 @@
 """Streamlit dashboard: stat tiles, tables, and the natural-language ask box.
 
-Currently calls purdo.queries.core and purdo.nl.ask in-process. DESIGN.md D3
-puts a FastAPI service on this boundary instead (httpx to localhost:8000); the
-query functions already take a Session and return JSON-ready dicts, so that
-swap is a change of transport, not of logic.
+A pure HTTP client (DESIGN.md D3) — it talks to the FastAPI service over httpx
+and never imports the query layer, opens a Session, or holds the API key. Start
+the API first; the base URL comes from API_BASE_URL.
 
-Run: uv run streamlit run dashboard/app.py
+Run: uv run uvicorn purdo.api.main:app --reload
+     uv run streamlit run dashboard/app.py
 """
-import streamlit as st
-from purdo.db import get_session
-from purdo.nl.ask import ask
+import os
 from datetime import date
-from purdo.queries import core
+
+import httpx
+import streamlit as st
+from dotenv import load_dotenv
+
+load_dotenv()
+API = os.getenv("API_BASE_URL", "http://localhost:8000")
+
+TODAY = date(2026, 9, 1)          # demo date — real Sept data lives here
+
+
+@st.cache_data(ttl=60)
+def api_get(path, **params):
+    """GET a query endpoint and return its rows. Cached so a keystroke in the
+    ask box doesn't refetch all four panels."""
+    r = httpx.get(f"{API}{path}", params=params, timeout=10)
+    r.raise_for_status()
+    return r.json()
+
 
 st.title("Purdo")
 st.caption("Ontology-driven academic planner")
@@ -20,23 +36,28 @@ question = st.text_input("Ask about your degree")
 
 if question:
     with st.spinner("Thinking..."):
-        result = ask(question)
+        # the NL round trip runs Claude server-side, so it needs a long timeout
+        r = httpx.post(f"{API}/ask", json={"question": question}, timeout=60)
+        r.raise_for_status()
+        result = r.json()
     st.write(result["answer"])
     st.caption(f"tool used: {result['tool_used']}")
     with st.expander("Raw data"):
         st.write(result["data"])
 
 
-session = get_session()
-today = date(2026, 9, 1)          # demo date — real Sept data lives here
-
-# run each query once, then render it twice (tile + table)
-due = core.due_this_week(session, today)
-exams = core.upcoming_exams(session, today)
-short = core.unsatisfied_requirements(session)
-blocked = core.blocked_courses(session)
-
 st.divider()
+
+try:
+    due = api_get("/assignments/due", today=TODAY.isoformat())
+    exams = api_get("/exams/upcoming", today=TODAY.isoformat())
+    short = api_get("/requirements/unsatisfied")
+    blocked = api_get("/courses/blocked")
+except httpx.HTTPError:
+    st.error(f"Can't reach the API at {API}. Start it with:\n\n"
+             "`uv run uvicorn purdo.api.main:app --reload`")
+    st.stop()
+
 c1, c2, c3, c4 = st.columns(4)
 with c1:
     st.metric("Due this week", len(due))
